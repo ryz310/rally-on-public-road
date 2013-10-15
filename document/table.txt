@@ -1,0 +1,7 @@
+Vehicle
++ apil_key
++ user_id
++ vehicle_id
+
+
+User

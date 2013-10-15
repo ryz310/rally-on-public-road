@@ -1,10 +1,10 @@
 class CreateUsers < ActiveRecord::Migration
   def change
     create_table :users do |t|
-      t.string :name
-      t.date_on :birthday
+      t.string     :name,       length: 32, null: false, default: ""
+      t.date       :birthday
       t.belongs_to :prefecture, index: true
-      t.text :profile
+      t.text       :profile,    length: 2048, default: ""
 
       t.timestamps
     end
