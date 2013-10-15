@@ -1,14 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FunToDrive2</title>
+  <title><%= t :app_title %></title>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "http://js.api.olp.yahooapis.jp/OpenLocalPlatform/V1/jsapi?appid=dj0zaiZpPTNCRjJFVmdMWE1hYyZzPWNvbnN1bWVyc2VjcmV0Jng9YzI-" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-
-<%= yield %>
-
+  <div id="header">
+    <div id="login-info"><%= t :msg_welcome, user: "D-yama" %> <%= link_to "プロフィール編集" %> <%= link_to "ログアウト" %></div>
+    <h1>みんなで公道ラリー</h1>
+    <div id="main-menu"></div>
+  </div>
+  
+  <div id="main" class="<%= sidebar_content? ? '' : 'nosidebar' %>">
+    <div id="sidebar">
+      <%= yield :sidebar %>
+    </div>
+    
+    <div id="content">
+      <%= yield %>
+    </div>
+  </div>
+  
+  <div id="footer">
+  </div>
 </body>
 </html>

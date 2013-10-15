@@ -1,0 +1,221 @@
+// http://colorschemedesigner.com/#3-61ThN--F3SM
+
+$bg-color: #FFFFFF;
+$color1: #8787FF;
+$color2: #B57DFF;
+$color3: #B57DFF;
+$color4: #B57DFF; 
+
+body {
+  background-color: $bg-color;
+  color: #333;
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+#header {
+  background-color: $color1;
+  min-height: 5.3em;
+  margin: 0;
+  color: #f8f8f8;
+  padding: 4px 8px 20px 6px;
+  position: relative;
+  a {
+    color: #f8f8f8;
+    text-decoration: none;
+  }
+  h1 a.ancestor {
+    font-size: 80%;
+  }
+}
+
+h1.headline {
+  background-color: $color2;
+  padding: 5px;
+  width: 85%;
+}
+
+h2.headline {
+  background-color: $color3;
+  padding: 5px;
+  width: 70%;
+}
+
+h3.headline {
+  background-color: $color4;
+  padding: 5px;
+  width: 60%;
+}
+
+th {
+  background-color: $color4;
+}
+
+table.list {
+  width: 70%;
+  .center {
+    text-align: center;
+  }
+  td {
+    padding: 0 5px;
+  }
+}
+
+p, ol, ul, td {
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+pre {
+  background-color: #eee;
+  padding: 10px;
+  font-size: 11px;
+}
+
+a {
+  color: #000;
+  &:visited {
+    color: #666;
+  }
+  &:hover {
+    color: #fff;
+    background-color: #000;
+  }
+}
+
+div {
+  &.field, &.actions {
+    margin-bottom: 10px;
+  }
+}
+
+#login-menu {
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    float: right;
+    list-style-type: none;
+    margin: 0px 0px 0px 10px;
+    padding: 0px 0px 0px 0px;
+    white-space: nowrap;
+  }
+}
+
+#main-menu {
+  position: absolute;
+  bottom: 0px;
+  left: 6px;
+  margin-right: -500px;
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    float: left;
+    list-style-type: none;
+    margin: 0px 2px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    white-space: nowrap;
+    a {
+      display: block;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 0;
+      padding: 4px 10px 4px 10px;
+      &:hover {
+        background: #759FCF;
+        color: #fff;
+      }
+      &.selected {
+        background: #fff;
+        color: #555;
+        &:hover {
+          background: #fff;
+          color: #555;
+        }
+      }
+    }
+  }
+}
+
+#main {
+  #sidebar {
+    float: left; 
+    width: 22%;
+    position: relative;
+    z-index: 9;
+  }
+  #content {
+    float: left;
+    width: 75%;
+    background-color: #fff;
+  }
+  padding: 0;
+  margin:  0;
+}
+
+#notice {
+  color: green;
+}
+
+.field_with_errors {
+  padding: 2px;
+  background-color: red;
+  display: table;
+}
+
+#error_explanation {
+  width: 450px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 0;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+  h2 {
+    text-align: left;
+    font-weight: bold;
+    padding: 5px 5px 5px 15px;
+    font-size: 12px;
+    margin: -7px;
+    margin-bottom: 0px;
+    background-color: #c00;
+    color: #fff;
+  }
+  ul li {
+    font-size: 12px;
+    list-style: square;
+  }
+}
+
+.pagination {
+  text-align: center;
+}
+
+/***** Media print specific styles *****/
+@media print {
+  #top-menu, #header, #main-menu, #sidebar, #footer, .contextual, .other-formats {
+    display: none;
+  }
+  #main {
+    background: #fff;
+  }
+  #content {
+    width: 99%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: #fff;
+    overflow: visible !important;
+  }
+  #wiki_add_attachment, .hide-when-print {
+    display: none;
+  }
+  .autoscroll {
+    overflow-x: visible;
+  }
+}

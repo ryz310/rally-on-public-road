@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<response>
+<carinfo>
+<car>
+	<userid>jpTKY-211</userid>
+	<vid>DLA-ZVW35-3125211</vid>
+</car>
+<data>
+	<createtime>2013-10-14T15:39:24</createtime>
+	<MapMatching>
+		<lat>35.669872167</lat>
+		<lon>139.736705500</lon>
+	</MapMatching>
+</data>
+</carinfo>
+
+</response>

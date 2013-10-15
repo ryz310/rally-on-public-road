@@ -1,4 +1,5 @@
 FunToDrive2::Application.routes.draw do
+  get "top_page/index"
   resources :check_points
 
   resources :rally_car_events
