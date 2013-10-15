@@ -1,0 +1,33 @@
+<h1>Listing rally_car_events</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Beginning on</th>
+      <th>End on</th>
+      <th>Note</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @rally_car_events.each do |rally_car_event| %>
+      <tr>
+        <td><%= rally_car_event.name %></td>
+        <td><%= rally_car_event.beginning_on %></td>
+        <td><%= rally_car_event.end_on %></td>
+        <td><%= rally_car_event.note %></td>
+        <td><%= link_to 'Show', rally_car_event %></td>
+        <td><%= link_to 'Edit', edit_rally_car_event_path(rally_car_event) %></td>
+        <td><%= link_to 'Destroy', rally_car_event, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Rally car event', new_rally_car_event_path %>

@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Event:</strong>
+  <%= @check_point.event %>
+</p>
+
+<p>
+  <strong>Number:</strong>
+  <%= @check_point.number %>
+</p>
+
+<p>
+  <strong>Latitude:</strong>
+  <%= @check_point.latitude %>
+</p>
+
+<p>
+  <strong>Longitude:</strong>
+  <%= @check_point.longitude %>
+</p>
+
+<p>
+  <strong>Note:</strong>
+  <%= @check_point.note %>
+</p>
+
+<%= link_to 'Edit', edit_check_point_path(@check_point) %> |
+<%= link_to 'Back', check_points_path %>

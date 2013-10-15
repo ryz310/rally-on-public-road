@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @rally_car_event.name %>
+</p>
+
+<p>
+  <strong>Beginning on:</strong>
+  <%= @rally_car_event.beginning_on %>
+</p>
+
+<p>
+  <strong>End on:</strong>
+  <%= @rally_car_event.end_on %>
+</p>
+
+<p>
+  <strong>Note:</strong>
+  <%= @rally_car_event.note %>
+</p>
+
+<%= link_to 'Edit', edit_rally_car_event_path(@rally_car_event) %> |
+<%= link_to 'Back', rally_car_events_path %>
