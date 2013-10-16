@@ -18,10 +18,10 @@ initMap = (ymap) ->
   ymap.setConfigure 'continuousZoom', true
   ymap.setConfigure 'scrollWheelZoom',true
   $.ajax
-    type: "GET"
+    type:     "GET"
     url:      url_gps
-    dataType: "xml"
-    success: (xmlData) ->
+    dataType: "jsonp"
+    success:  (xmlData) ->
       console.log "ymap success"
       lat = $(xmlData).find("lat").text()
       lon = $(xmlData).find("lon").text()
@@ -31,10 +31,9 @@ initMap = (ymap) ->
       ymap.drawMap new Y.LatLng(35.39291572, 139.44288869), 8, Y.LayerSetId.NORMAL
 
 # マーカーを MAP 上に追加
-markup = (lat, lon, message) ->
-  latlng = new Y.LatLng(lat, lon)
-  marker = new Y.Marker latlng
-  @ymap.addFeature marker, title: message
+markup = (latlng, message) ->
+  marker = new Y.Marker latlng, title: message
+  @ymap.addFeature marker
 
 # チェックポイントを描画
 @drowCheckPoint = (rallyID) ->
@@ -42,23 +41,23 @@ markup = (lat, lon, message) ->
     type:     "GET"
     url:      url_cp + rallyID
     dataType: "jsonp"
-    success: (json) =>
+    success:  (json) =>
       @ymap.clearFeatures()
       json.forEach (x) ->
         latlng = new Y.LatLng x.Latitude, x.Longitude
         @ymap.setZoom 15, true, latlng, true
-        @ymap.panTo latlng, true
-        markup x.Latitude, x.Longitude, x.Name
+        @ymap.panTo   latlng, true
+        markup latlng, "<b>" + x.Name + "</b>" + "<br />" + x.Discription
     error: ->
       console.log "@drowCheckPoint error"
 
 # <li>タグを更新
 @updateListItem = (targetListId, sourceUrl) ->
   $.ajax
-    type: "GET"
-    url:  sourceUrl
+    type:     "GET"
+    url:      sourceUrl
     dataType: "jsonp"
-    success: (json) ->
+    success:  (json) ->
       target = $ targetListId
       target.empty()
       json.forEach (x) -> 
