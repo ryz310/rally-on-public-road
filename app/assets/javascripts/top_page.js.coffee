@@ -1,11 +1,11 @@
 user01 = "001"
-url       = "http://rallyonpublicroad.azurewebsites.net/"
-url_user  = url + "api/user"
-url_rally = url + "api/Rally"
-url_cp    = url + "api/CheckPoint?rallyId="
-url_tag   = url + "api/Tag"
-url_join  = url + "api/participateRally?userId=" + user01
-url_gps   = url + "tiwa/getPriusLocation"
+urlRoot          = "http://rallyonpublicroad.azurewebsites.net/"
+urlUser          = urlRoot + "api/user"
+urlRally         = urlRoot + "api/Rally"
+urlCheckPoint    = urlRoot + "api/CheckPoint?rallyId="
+urlTag           = urlRoot + "api/Tag"
+urlParticipate   = urlRoot + "api/participateRally?userId=" + user01
+urlPriusLocation = urlRoot + "tiwa/getPriusLocation"
 
 # Ajax による JSONP 取得用メソッド
 myAjax = (apiUrl, successAction, errorAction = ->) ->
@@ -31,25 +31,33 @@ initMap = (ymap) ->
   ymap.setConfigure 'continuousZoom', true
   ymap.setConfigure 'scrollWheelZoom',true
 
-  myAjax url_gps, ((json) -> 
+  myAjax urlPriusLocation, ((json) -> 
     ymap.drawMap new Y.LatLng(json.Latitude, json.Longitude), 12, Y.LayerSetId.NORMAL
   ), ->
     ymap.drawMap new Y.LatLng(  35.39291572,   139.44288869), 12, Y.LayerSetId.NORMAL
     
 # マーカーを MAP 上に追加
-markup = (latlng, message) ->
-  marker = new Y.Marker latlng, title: message
+markup = (latlng, message, icon = Y.Icon.DEFAULT_ICON) ->
+  marker = new Y.Marker latlng, title: message, icon: icon
   @ymap.addFeature marker
 
 # チェックポイントを描画
 @drowCheckPoint = (rallyID) ->
-  myAjax url_cp + rallyID, (json) ->
+  myAjax urlCheckPoint + rallyID, (json) ->
     @ymap.clearFeatures()
     json.forEach (x) ->
       latlng = new Y.LatLng x.Latitude, x.Longitude
       @ymap.setZoom 15, true, latlng, true
       @ymap.panTo   latlng, true
       markup latlng, "<b>" + x.Name + "</b>" + "<br />" + x.Discription
+
+# タグを描画
+@drowTag = ->
+  myAjax urlTag, (json) ->
+    json.forEach (x) ->
+      latlng = new Y.LatLng x.Latitude, x.Longitude
+      markup latlng, x.UserName + "<br />" + x.Message, new Y.Icon(x.ImagePath)
+    
 
 # <li>タグを更新
 @updateListItem = (targetListId, sourceUrl) ->
@@ -67,6 +75,6 @@ $(document).ready =>
   initMap @ymap
 
   # <li>タグ情報更新
-  @updateListItem "#rally_participate", url_join
-  @updateListItem "#rally_list",        url_rally
+  @updateListItem "#rally_participate", urlParticipate
+  @updateListItem "#rally_list",        urlRally
   
