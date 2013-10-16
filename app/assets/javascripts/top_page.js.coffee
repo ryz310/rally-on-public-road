@@ -7,6 +7,19 @@ url_tag   = url + "api/Tag"
 url_join  = url + "api/participateRally?userId=" + user01
 url_gps   = url + "tiwa/getPriusLocation"
 
+# Ajax による JSONP 取得用メソッド
+myAjax = (apiUrl, successAction, errorAction = ->) ->
+  $.ajax
+    type:     "GET"
+    url:      apiUrl
+    dataType: "jsonp"
+    success:  (json) ->
+      console.log "success: " + apiUrl
+      successAction json
+    error: ->
+      console.log "error: "   + apiUrl
+      errorAction()
+
 # YMAPのインスタンス
 @ymap = undefined
 
@@ -17,19 +30,12 @@ initMap = (ymap) ->
   ymap.setConfigure 'doubleClickZoom',true
   ymap.setConfigure 'continuousZoom', true
   ymap.setConfigure 'scrollWheelZoom',true
-  $.ajax
-    type:     "GET"
-    url:      url_gps
-    dataType: "jsonp"
-    success:  (xmlData) ->
-      console.log "ymap success"
-      lat = $(xmlData).find("lat").text()
-      lon = $(xmlData).find("lon").text()
-      ymap.drawMap new Y.LatLng(lat, lon), 12, Y.LayerSetId.NORMAL
-    error: ->
-      console.log "initMap error"
-      ymap.drawMap new Y.LatLng(35.39291572, 139.44288869), 8, Y.LayerSetId.NORMAL
 
+  myAjax url_gps, ((json) -> 
+    ymap.drawMap new Y.LatLng(json.Latitude, json.Longitude), 12, Y.LayerSetId.NORMAL
+  ), ->
+    ymap.drawMap new Y.LatLng(  35.39291572,   139.44288869), 12, Y.LayerSetId.NORMAL
+    
 # マーカーを MAP 上に追加
 markup = (latlng, message) ->
   marker = new Y.Marker latlng, title: message
@@ -37,33 +43,21 @@ markup = (latlng, message) ->
 
 # チェックポイントを描画
 @drowCheckPoint = (rallyID) ->
-  $.ajax
-    type:     "GET"
-    url:      url_cp + rallyID
-    dataType: "jsonp"
-    success:  (json) =>
-      @ymap.clearFeatures()
-      json.forEach (x) ->
-        latlng = new Y.LatLng x.Latitude, x.Longitude
-        @ymap.setZoom 15, true, latlng, true
-        @ymap.panTo   latlng, true
-        markup latlng, "<b>" + x.Name + "</b>" + "<br />" + x.Discription
-    error: ->
-      console.log "@drowCheckPoint error"
+  myAjax url_cp + rallyID, (json) ->
+    @ymap.clearFeatures()
+    json.forEach (x) ->
+      latlng = new Y.LatLng x.Latitude, x.Longitude
+      @ymap.setZoom 15, true, latlng, true
+      @ymap.panTo   latlng, true
+      markup latlng, "<b>" + x.Name + "</b>" + "<br />" + x.Discription
 
 # <li>タグを更新
 @updateListItem = (targetListId, sourceUrl) ->
-  $.ajax
-    type:     "GET"
-    url:      sourceUrl
-    dataType: "jsonp"
-    success:  (json) ->
-      target = $ targetListId
-      target.empty()
-      json.forEach (x) -> 
-        target.append "<li>" + "<a href='#' onclick='drowCheckPoint(" + x.Id.substr(5, 3) + ");return false;'>" + x.Name + "</a>"
-    error: ->
-      console.log "@updateListItem error."
+  myAjax sourceUrl, (json) ->
+    target = $ targetListId
+    target.empty()
+    json.forEach (x) -> 
+      target.append "<li>" + "<a href='#' onclick='drowCheckPoint(" + x.Id.substr(5, 3) + ");return false;'>" + x.Name + "</a>"
 
 # 初期化
 $(document).ready =>
