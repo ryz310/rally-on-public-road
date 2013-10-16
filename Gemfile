@@ -4,8 +4,21 @@ ruby "2.0.0"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
 
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+# for Heroku
+group :production do
+  # Use PostgreSql as the database for Active Record
+  gem 'pg'
+  # Rails 4
+  gem 'rails_12factor'
+end
+
+group :development, :test do
+  # Use Sqlite3 as the database for Active Record
+  gem 'sqlite3'
+  # Debugging tools
+  gem 'better_errors'
+  gem 'binding_of_caller'
+end
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
@@ -36,12 +49,6 @@ end
 # Sign in with Twitter Account.
 gem 'omniauth-twitter'
 gem 'twitter'
-
-group :development, :test do
-  # Debugging tools
-  gem 'better_errors'
-  gem 'binding_of_caller'
-end
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
