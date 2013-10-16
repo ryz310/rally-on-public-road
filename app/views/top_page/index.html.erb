@@ -1,17 +1,12 @@
 <% content_for :sidebar do %>
-  参加中のラリー
-  <ul>
-    <li><%= link_to "艦これスーパーラリー2013" %>
-  </ul>
-  
-  開催中のラリー
-  <ul>
-    <li><%= link_to "花いろ湯涌温泉ラリー" %>
-    <li><%= link_to "メガネブ" %>
-    <li><%= link_to "佐々成政 戦場ラリー" %>
-  </ul>
+  <div>
+    <p>参加中のラリー</p>
+    <ul id="rally_participate"></ul>
+  </div>
+  <div>
+    <p>開催中のラリー</p>
+    <ul id="rally_list"></ul>
+  </div>
 <% end %>
 
 <div id="map" style="width:1024px; height:768px"></div>
-
-<a onclick="markup(35.769269500, 139.836911167, 'hoge'); return false;">markup</a>
