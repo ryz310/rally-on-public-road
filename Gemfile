@@ -8,6 +8,7 @@ gem 'rails', '4.0.0'
 group :production do
   # Use PostgreSql as the database for Active Record
   gem 'pg'
+  gem 'sqlite3'
   # Rails 4
   gem 'rails_12factor'
 end
