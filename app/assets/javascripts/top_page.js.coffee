@@ -39,13 +39,25 @@ initMap = (ymap) ->
     
 # マーカーを MAP 上に追加
 markup = (latlng, message, icon = Y.Icon.DEFAULT_ICON) ->
-  title = "<p>" + message + "</p>" + "<img src='" + @streetViewUrl(latlng, 120, 90) + "' />"
+  title = "<p>" + message + "</p>" + "<img src='" + streetViewUrl(latlng, 120, 90) + "' />"
   marker = new Y.Marker latlng, title: title, icon: icon
   marker.bind 'click', =>
     target = $ "#street_view"
     target.empty()
-    target.append "<img src='" + @streetViewUrl(latlng, 480, 360) + "' />"
+    target.append "<img src='" + streetViewUrl(latlng, 480, 360) + "' />"
   @ymap.addFeature marker
+
+# Google Street View Image API 画像URL
+streetViewUrl = (latlng, width = 280, height = 180) ->
+  urlStreetView + "&location=" + latlng.lat() + "," + latlng.lng() + "&size=" + width + "x" + height
+
+# <li>タグを更新
+updateListItem = (targetListId, sourceUrl) ->
+  myAjax sourceUrl, (json) ->
+    target = $ targetListId
+    target.empty()
+    json.forEach (x) -> 
+      target.append "<li>" + "<a href='#' onclick='drowCheckPoint(" + x.Id.substr(5, 3) + ");return false;'>" + x.Name + "</a>"
 
 # チェックポイントを描画
 @drowCheckPoint = (rallyID) ->
@@ -66,18 +78,6 @@ markup = (latlng, message, icon = Y.Icon.DEFAULT_ICON) ->
       # img = x.ImagePath
       markup latlng, x.UserName + "<br />" + x.Message
 
-# Google Street View Image API 画像URL
-@streetViewUrl = (latlng, width = 280, height = 180) ->
-  urlStreetView + "&location=" + latlng.lat() + "," + latlng.lng() + "&size=" + width + "x" + height
-
-# <li>タグを更新
-@updateListItem = (targetListId, sourceUrl) ->
-  myAjax sourceUrl, (json) ->
-    target = $ targetListId
-    target.empty()
-    json.forEach (x) -> 
-      target.append "<li>" + "<a href='#' onclick='drowCheckPoint(" + x.Id.substr(5, 3) + ");return false;'>" + x.Name + "</a>"
-
 # 初期化
 $(document).ready =>
   @ymap = new Y.Map "map"
@@ -86,6 +86,6 @@ $(document).ready =>
   initMap @ymap
 
   # <li>タグ情報更新
-  @updateListItem "#rally_participate", urlParticipate
-  @updateListItem "#rally_list",        urlRally
+  updateListItem "#rally_participate", urlParticipate
+  updateListItem "#rally_list",        urlRally
   
