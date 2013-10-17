@@ -6,7 +6,7 @@ urlCheckPoint    = urlRoot + "api/CheckPoint?rallyId="
 urlTag           = urlRoot + "api/Tag"
 urlParticipate   = urlRoot + "api/participateRally?userId=" + user01
 urlPriusLocation = urlRoot + "api/getPriusLocation"
-urlStreetView    = "http://maps.googleapis.com/maps/api/streetview?sensor=false"
+urlStreetView    = "http://maps.googleapis.com/maps/api/streetview?sensor=true"
 
 # Ajax による JSONP 取得用メソッド
 myAjax = (apiUrl, successAction, errorAction = ->) ->
@@ -25,7 +25,7 @@ myAjax = (apiUrl, successAction, errorAction = ->) ->
 @ymap = undefined
 
 # YMAP 初期化
-initMap = (ymap) ->
+initYMap = (ymap) ->
   ymap.setConfigure 'dragging',       true
   ymap.setConfigure 'singleClickPan', true
   ymap.setConfigure 'doubleClickZoom',true
@@ -36,13 +36,16 @@ initMap = (ymap) ->
 drowPrius = ->
   myAjax urlPriusLocation, (json) ->
     latlng = new Y.LatLng(json[0].Latitude, json[0].Longitude)
-    # @ymap.drawMap latlng, 12, Y.LayerSetId.NORMAL
-    markup latlng, "hoge"
+    @ymap.clearFeatures()
+    markup latlng, "プリウスの現在位置"
+    @ymap.panTo   latlng, true
     updateStreetView latlng
 
 # マーカーを MAP 上に追加
-markup = (latlng, message, icon = Y.Icon.DEFAULT_ICON) ->
-  title = "<p>" + message + "</p>" + "<img src='" + streetViewUrl(latlng, 120, 90) + "' />"
+markup = (latlng, message, enableStreetView = false, icon = Y.Icon.DEFAULT_ICON) ->
+  title = "<p>" + message + "</p>"
+  if enableStreetView
+    title += "<img src='" + streetViewUrl(latlng, 120, 90) + "' />"
   marker = new Y.Marker latlng, title: title, icon: icon
   marker.bind 'click', =>
     updateStreetView latlng
@@ -62,10 +65,15 @@ updateListItem = (targetListId, sourceUrl) ->
 
 # StreetView 表示領域を更新
 updateStreetView = (latlng) ->
-  target = $ "#street_view"
-  target.empty()
-  target.append "<img src='" + streetViewUrl(latlng, 480, 360) + "' />"
-
+  img = new Image()
+  img.onload = ->
+    target = $ "#street_view"
+    target.empty()
+    target.append img
+  img.onerror = ->
+    console.log "image load error"
+  img.src = streetViewUrl latlng, 480, 360
+    
 # チェックポイントを描画
 @drowCheckPoint = (rallyID) ->
   myAjax urlCheckPoint + rallyID, (json) ->
@@ -74,7 +82,7 @@ updateStreetView = (latlng) ->
       latlng = new Y.LatLng x.Latitude, x.Longitude
       @ymap.setZoom 15, true, latlng, true
       @ymap.panTo   latlng, true
-      markup latlng, "<b>" + x.Name + "</b>" + "<br />" + x.Discription 
+      markup latlng, "<b>" + x.Name + "</b>" + "<br />" + x.Discription, true
 
 # タグを描画
 @drowTag = ->
@@ -83,20 +91,28 @@ updateStreetView = (latlng) ->
       latlng = new Y.LatLng x.Latitude, x.Longitude
       @ymap.setZoom 16, true, latlng, true
       # img = x.ImagePath
-      markup latlng, x.UserName + "<br />" + x.Message
+      markup latlng, x.UserName + "<br />" + x.Message, true
+
+# プリウスを地図上に追跡する
+trackingTimer = undefined
+@trackingPrius = ->
+  drowPrius()
+  trackingTimer = setInterval (->
+    drowPrius()
+  ), 3000
+
+# プリウスの追跡を終了する
+@trackingStop = ->
+  clearInterval trackingTimer
 
 # 初期化
 $(document).ready =>
   @ymap = new Y.Map "map"
   
   # マップ情報初期化
-  initMap @ymap
+  initYMap @ymap
 
   # <li>タグ情報更新
   updateListItem "#rally_participate", urlParticipate
   updateListItem "#rally_list",        urlRally
-  
-  setInterval (->
-    drowPrius()
-  ), 1000
   
