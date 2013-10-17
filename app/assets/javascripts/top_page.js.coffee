@@ -5,7 +5,7 @@ urlRally         = urlRoot + "api/Rally"
 urlCheckPoint    = urlRoot + "api/CheckPoint?rallyId="
 urlTag           = urlRoot + "api/Tag"
 urlParticipate   = urlRoot + "api/participateRally?userId=" + user01
-urlPriusLocation = urlRoot + "tiwa/getPriusLocation"
+urlPriusLocation = urlRoot + "api/getPriusLocation"
 urlStreetView    = "http://maps.googleapis.com/maps/api/streetview?sensor=false"
 
 # Ajax による JSONP 取得用メソッド
@@ -31,20 +31,21 @@ initMap = (ymap) ->
   ymap.setConfigure 'doubleClickZoom',true
   ymap.setConfigure 'continuousZoom', true
   ymap.setConfigure 'scrollWheelZoom',true
+  ymap.drawMap new Y.LatLng(  35.39291572,   139.44288869),  7, Y.LayerSetId.NORMAL
+   
+drowPrius = ->
+  myAjax urlPriusLocation, (json) ->
+    latlng = new Y.LatLng(json[0].Latitude, json[0].Longitude)
+    # @ymap.drawMap latlng, 12, Y.LayerSetId.NORMAL
+    markup latlng, "hoge"
+    updateStreetView latlng
 
-  myAjax urlPriusLocation, ((json) -> 
-    ymap.drawMap new Y.LatLng(json.Latitude, json.Longitude), 12, Y.LayerSetId.NORMAL
-  ), ->
-    ymap.drawMap new Y.LatLng(  35.39291572,   139.44288869),  7, Y.LayerSetId.NORMAL
-    
 # マーカーを MAP 上に追加
 markup = (latlng, message, icon = Y.Icon.DEFAULT_ICON) ->
   title = "<p>" + message + "</p>" + "<img src='" + streetViewUrl(latlng, 120, 90) + "' />"
   marker = new Y.Marker latlng, title: title, icon: icon
   marker.bind 'click', =>
-    target = $ "#street_view"
-    target.empty()
-    target.append "<img src='" + streetViewUrl(latlng, 480, 360) + "' />"
+    updateStreetView latlng
   @ymap.addFeature marker
 
 # Google Street View Image API 画像URL
@@ -58,6 +59,12 @@ updateListItem = (targetListId, sourceUrl) ->
     target.empty()
     json.forEach (x) -> 
       target.append "<li>" + "<a href='#' onclick='drowCheckPoint(" + x.Id.substr(5, 3) + ");return false;'>" + x.Name + "</a>"
+
+# StreetView 表示領域を更新
+updateStreetView = (latlng) ->
+  target = $ "#street_view"
+  target.empty()
+  target.append "<img src='" + streetViewUrl(latlng, 480, 360) + "' />"
 
 # チェックポイントを描画
 @drowCheckPoint = (rallyID) ->
@@ -88,4 +95,8 @@ $(document).ready =>
   # <li>タグ情報更新
   updateListItem "#rally_participate", urlParticipate
   updateListItem "#rally_list",        urlRally
+  
+  setInterval (->
+    drowPrius()
+  ), 1000
   
