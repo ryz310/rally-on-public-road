@@ -22,10 +22,11 @@ myAjax = (apiUrl, successAction, errorAction = ->) ->
       errorAction()
 
 # YMAPのインスタンス
-@ymap = undefined
+ymap = undefined
 
 # YMAP 初期化
-initYMap = (ymap) ->
+initYMap = ->
+  ymap = new Y.Map "map"
   ymap.setConfigure 'dragging',       true
   ymap.setConfigure 'singleClickPan', true
   ymap.setConfigure 'doubleClickZoom',true
@@ -36,9 +37,9 @@ initYMap = (ymap) ->
 drowPrius = ->
   myAjax urlPriusLocation, (json) ->
     latlng = new Y.LatLng(json[0].Latitude, json[0].Longitude)
-    @ymap.clearFeatures()
+    ymap.clearFeatures()
     markup latlng, "プリウスの現在位置"
-    @ymap.panTo   latlng, true
+    ymap.panTo   latlng, true
     updateStreetView latlng
 
 # マーカーを MAP 上に追加
@@ -49,7 +50,7 @@ markup = (latlng, message, enableStreetView = false, icon = Y.Icon.DEFAULT_ICON)
   marker = new Y.Marker latlng, title: title, icon: icon
   marker.bind 'click', =>
     updateStreetView latlng
-  @ymap.addFeature marker
+  ymap.addFeature marker
 
 # Google Street View Image API 画像URL
 streetViewUrl = (latlng, width = 280, height = 180) ->
@@ -67,21 +68,23 @@ updateListItem = (targetListId, sourceUrl) ->
 updateStreetView = (latlng) ->
   img = new Image()
   img.onload = ->
-    target = $ "#street_view"
-    target.empty()
-    target.append img
+    clearStreetView()
+    $("#street_view").append img
   img.onerror = ->
     console.log "image load error"
   img.src = streetViewUrl latlng, 480, 360
     
+clearStreetView = ->
+  $("#street_view").empty()
+    
 # チェックポイントを描画
 @drowCheckPoint = (rallyID) ->
   myAjax urlCheckPoint + rallyID, (json) ->
-    @ymap.clearFeatures()
+    ymap.clearFeatures()
     json.forEach (x) ->
       latlng = new Y.LatLng x.Latitude, x.Longitude
-      @ymap.setZoom 15, true, latlng, true
-      @ymap.panTo   latlng, true
+      ymap.setZoom 15, true, latlng, true
+      ymap.panTo   latlng, true
       markup latlng, "<b>" + x.Name + "</b>" + "<br />" + x.Discription, true
 
 # タグを描画
@@ -89,7 +92,7 @@ updateStreetView = (latlng) ->
   myAjax urlTag, (json) ->
     json.forEach (x) ->
       latlng = new Y.LatLng x.Latitude, x.Longitude
-      @ymap.setZoom 16, true, latlng, true
+      ymap.setZoom 16, true, latlng, true
       # img = x.ImagePath
       markup latlng, x.UserName + "<br />" + x.Message, true
 
@@ -104,13 +107,12 @@ trackingTimer = undefined
 # プリウスの追跡を終了する
 @trackingStop = ->
   clearInterval trackingTimer
+  clearStreetView()
 
 # 初期化
 $(document).ready =>
-  @ymap = new Y.Map "map"
-  
   # マップ情報初期化
-  initYMap @ymap
+  initYMap()
 
   # <li>タグ情報更新
   updateListItem "#rally_participate", urlParticipate
