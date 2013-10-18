@@ -7,6 +7,8 @@ urlTag           = urlRoot + "api/Tag"
 urlParticipate   = urlRoot + "api/participateRally?userId=" + user01
 urlPriusLocation = urlRoot + "api/getPriusLocation"
 urlStreetView    = "http://maps.googleapis.com/maps/api/streetview?sensor=true"
+imgCheckerFlag   = "/assets/checkerflag.png"
+imgSCheckerFlag  = "/assets/s_checkerflag.png"
 
 # Ajax による JSONP 取得用メソッド
 myAjax = (apiUrl, successAction, errorAction = ->) ->
@@ -32,7 +34,7 @@ initYMap = ->
   ymap.setConfigure 'doubleClickZoom',true
   ymap.setConfigure 'continuousZoom', true
   ymap.setConfigure 'scrollWheelZoom',true
-  ymap.drawMap new Y.LatLng(  35.39291572,   139.44288869),  7, Y.LayerSetId.NORMAL
+  ymap.drawMap new Y.LatLng(35.39291572, 139.44288869), 7, Y.LayerSetId.NORMAL
    
 drowPrius = ->
   myAjax urlPriusLocation, (json) ->
@@ -61,8 +63,8 @@ updateListItem = (targetListId, sourceUrl) ->
   myAjax sourceUrl, (json) ->
     target = $ targetListId
     target.empty()
-    json.forEach (x) -> 
-      target.append "<li>" + "<a href='#' onclick='drowCheckPoint(" + x.Id.substr(5, 3) + ");return false;'>" + x.Name + "</a>"
+    json.forEach (x) ->
+      target.append "<li>" + "<a href='#' onclick='drowCheckPoint(" + x.RallyId.substr(5, 3) + ");return false;'>" + x.Name + "</a>"
 
 # StreetView 表示領域を更新
 updateStreetView = (latlng) ->
@@ -85,7 +87,7 @@ clearStreetView = ->
       latlng = new Y.LatLng x.Latitude, x.Longitude
       ymap.setZoom 15, true, latlng, true
       ymap.panTo   latlng, true
-      markup latlng, "<b>" + x.Name + "</b>" + "<br />" + x.Discription, true
+      markup latlng, "<b>" + x.Name + "</b>" + "<br />" + x.Discription, true, new Y.Icon imgSCheckerFlag
 
 # タグを描画
 @drowTag = ->
@@ -94,7 +96,7 @@ clearStreetView = ->
       latlng = new Y.LatLng x.Latitude, x.Longitude
       ymap.setZoom 16, true, latlng, true
       # img = x.ImagePath
-      markup latlng, x.UserName + "<br />" + x.Message, true
+      markup latlng, x.UserName + "<br />" + x.Message, true, new Y.Icon imgCheckerFlag
 
 # プリウスを地図上に追跡する
 trackingTimer = undefined
@@ -113,7 +115,7 @@ trackingTimer = undefined
 $(document).ready =>
   # マップ情報初期化
   initYMap()
-
+  
   # <li>タグ情報更新
   updateListItem "#rally_participate", urlParticipate
   updateListItem "#rally_list",        urlRally
