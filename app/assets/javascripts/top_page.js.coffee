@@ -49,7 +49,7 @@ markup = (latlng, message, enableStreetView = false, icon = Y.Icon.DEFAULT_ICON)
   title = "<p>" + message + "</p>"
   if enableStreetView
     title += "<img src='" + streetViewUrl(latlng, 120, 90) + "' />"
-  marker = new Y.Marker latlng, title: title, icon: icon
+  marker = new Y.Marker latlng, title: title #, icon: icon
   marker.bind 'click', =>
     updateStreetView latlng
   ymap.addFeature marker
