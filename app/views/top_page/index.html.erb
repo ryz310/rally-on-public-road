@@ -8,11 +8,11 @@
     <ul id="rally_list"></ul>
   </div>
   <div>
-    <a href="#" onclick="drowTag();return false;">Drow Tags</a>
+    <%= link_to "Drow Tags", "#", onclick: "drowTag();return false;" %>
   </div>
   <div>
-    <a href="#" onclick="trackingPrius();return false;">Tracking Purius</a> |
-    <a href="#" onclick="trackingStop();return false;">Stop</a>
+    <%= link_to "Tracking Prius", "#", onclick: "trackingPrius();return false;" %> |
+    <%= link_to "Stop",           "#", onclick: "trackingStop();return false;" %> 
   </div>
   <br />
   
