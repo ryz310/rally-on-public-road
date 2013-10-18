@@ -9,6 +9,7 @@ urlPriusLocation = urlRoot + "api/getPriusLocation"
 urlStreetView    = "http://maps.googleapis.com/maps/api/streetview?sensor=true"
 imgCheckerFlag   = "http://res.cloudinary.com/howrowfvo/image/upload/v1382103038/s_checkerflag_tpidex.png"
 imgSCheckerFlag  = "http://res.cloudinary.com/howrowfvo/image/upload/v1382103038/checkerflag_v6n0js.png"
+imgPriusTan      = "http://res.cloudinary.com/htx0gxzfc/image/upload/c_scale,w_160/v1382103868/prius-tan_pgwkgs.jpg"
 
 # Ajax による JSONP 取得用メソッド
 myAjax = (apiUrl, successAction, errorAction = ->) ->
@@ -40,7 +41,7 @@ drowPrius = ->
   myAjax urlPriusLocation, (json) ->
     latlng = new Y.LatLng(json[0].Latitude, json[0].Longitude)
     ymap.clearFeatures()
-    markup latlng, "プリウスの現在位置"
+    markup latlng, "プリウスたんの現在位置<br /><img src='" + imgPriusTan + "' />"
     ymap.panTo   latlng, true
     updateStreetView latlng
 
