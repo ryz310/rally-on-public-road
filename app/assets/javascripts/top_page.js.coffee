@@ -7,8 +7,8 @@ urlTag           = urlRoot + "api/Tag"
 urlParticipate   = urlRoot + "api/participateRally?userId=" + user01
 urlPriusLocation = urlRoot + "api/getPriusLocation"
 urlStreetView    = "http://maps.googleapis.com/maps/api/streetview?sensor=true"
-imgCheckerFlag   = "/assets/checkerflag.png"
-imgSCheckerFlag  = "/assets/s_checkerflag.png"
+imgCheckerFlag   = "http://res.cloudinary.com/howrowfvo/image/upload/v1382103038/s_checkerflag_tpidex.png"
+imgSCheckerFlag  = "http://res.cloudinary.com/howrowfvo/image/upload/v1382103038/checkerflag_v6n0js.png"
 
 # Ajax による JSONP 取得用メソッド
 myAjax = (apiUrl, successAction, errorAction = ->) ->
@@ -49,7 +49,7 @@ markup = (latlng, message, enableStreetView = false, icon = Y.Icon.DEFAULT_ICON)
   title = "<p>" + message + "</p>"
   if enableStreetView
     title += "<img src='" + streetViewUrl(latlng, 120, 90) + "' />"
-  marker = new Y.Marker latlng, title: title #, icon: icon
+  marker = new Y.Marker latlng, title: title, icon: icon
   marker.bind 'click', =>
     updateStreetView latlng
   ymap.addFeature marker
