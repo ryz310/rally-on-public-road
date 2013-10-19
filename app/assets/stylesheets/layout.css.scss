@@ -150,9 +150,10 @@ div {
 #main {
   #sidebar {
     float: left; 
-    width: 25%;
+    width: 20%;
     position: relative;
     z-index: 9;
+    
     div#street_view img{
       padding: 3px;
       border: 1px solid #3c3c3c;
@@ -162,14 +163,22 @@ div {
   }
   #content {
     float: left;
-    width: 50%;
+    width: 60%;
   }
-  padding: 0;
-  margin:  0;
   
   #timeline {
     float: left;
-    width: 25%;
+    width: 20%;
+    
+    header.timeline-header {
+      border-bottom: 1px solid #222426;
+      padding: 0 10px;
+    }
+    
+    div.timeline-content {
+      height: 580px;
+      overflow-y: scroll;
+    }
   }
 }
 

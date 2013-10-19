@@ -13,6 +13,15 @@
   <%= link_to "Tracking Prius", "#", onclick: "trackingPrius();return false;" %> |
   <%= link_to "Stop",           "#", onclick: "trackingStop();return false;" %> 
 </div>
+<div>
+  <%= link_to "New Message", "#", 
+      onclick: "newMessage('" + escape_javascript(render("tweet", 
+                  timestamp: "now", 
+                  fullname: "UserName", 
+                  username: "username", 
+                  avatar_url: "http://mobile.gungho.jp/library/img/details/pad/kabegami/Echidna.gif", 
+                  message: "Message.Hello, world.")) + "', 35.900949, 136.202465);return false;" %>
+</div>
 <br />
 
 <div id="street_view"></div>

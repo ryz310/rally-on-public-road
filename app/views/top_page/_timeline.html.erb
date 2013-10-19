@@ -4,25 +4,12 @@
   </header>
   <div class="timeline-content">
     <% 10.times do %>
-      <article class="tweet-item">
-        <header class="tweet-header">
-          <div class="tweet-img">
-            <img class="tweet-avatar" src="http://mobile.gungho.jp/library/img/details/pad/kabegami/Echidna.gif" />
-          </div>
-          <div class="nbfc">
-            <b class="fullname">UserNames</b>
-            <span class="username">
-              <span class="at">@</span>username
-            </span>
-          </div>
-        </header>
-        <div class="tweet-content">
-          <div class="tweet-body">
-            Message.<br />
-            Hello, world.
-          </div>
-        </div>
-      </article>
+      <%= render "tweet", 
+        timestamp: "15m",
+        fullname: "UserName", 
+        username: "username", 
+        avatar_url: "http://mobile.gungho.jp/library/img/details/pad/kabegami/Echidna.gif", 
+        message: "Message.Hello, world." %>
     <% end %>
   </div>
 </div>

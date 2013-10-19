@@ -108,10 +108,26 @@ time_span = 1000
 # タグを描画
 @drowTag = ->
   myAjax urlTag, (json) ->
+    lat_sum = 0
+    lng_sum = 0
     json.forEach (x) ->
       latlng = new Y.LatLng x.Latitude, x.Longitude
-      ymap.setZoom 12, true, latlng, true
-      markup latlng, x.UserName + "<br />" + x.Message, true, new Y.Icon imgCheckerFlag
+      lat_sum += x.Latitude
+      lng_sum += x.Longitude
+      message = "<b>" + x.UserName + "</b>" + "<br />" + x.Message
+      markup latlng, message, true, new Y.Icon imgCheckerFlag
+    center = new Y.LatLng lat_sum / json.length, lng_sum / json.length
+    ymap.setZoom 15, true, center, true
+
+# Tweet の内容を地図上に表示する
+@newMessage = (tweet, lat, lng) ->
+  latlng = new Y.LatLng lat, lng
+  message = tweet
+  ymap.panTo latlng
+  ymap.openInfoWindow latlng, message
+  setTimeout (->
+    ymap.closeInfoWindow()
+  ), 5000
 
 # プリウスを地図上に追跡する
 trackingTimer = undefined

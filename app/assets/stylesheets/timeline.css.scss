@@ -1,17 +1,20 @@
-header.timeline-header {
-  border-bottom: 1px solid #222426;
-  padding: 0 10px;
-}
-
 article.tweet-item {
   border-bottom: 1px solid #3c3c3c;
   padding: 8px 10px;
-  header.tweet-header{
+
+  header.tweet-header {
+    time.tweet-timestamp {
+      float: right;
+    }
+
     div.tweet-img {
       float: left;
       margin-right: 10px;
+
       img.tweet-avatar {
         float: right;
+        margin-top: 2px;
+        margin-bottom: 2px;
         width: 48px;
         height: 48px;
         -webkit-border-radius: 3px;
@@ -21,8 +24,15 @@ article.tweet-item {
         border-radius: 3px;
       }
     }
+
     div.nbfc {
       overflow: hidden;
+    }
+  }
+
+  div.tweet-content {
+    footer.tweet-footer {
+      margin-top: 3px;
     }
   }
 }
