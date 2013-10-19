@@ -7,8 +7,8 @@ urlTag           = urlRoot + "api/Tag"
 urlParticipate   = urlRoot + "api/participateRally?userId=" + user01
 urlPriusLocation = urlRoot + "api/getPriusLocation"
 urlStreetView    = "http://maps.googleapis.com/maps/api/streetview?sensor=true"
-imgCheckerFlag   = "http://res.cloudinary.com/howrowfvo/image/upload/v1382103038/s_checkerflag_tpidex.png"
-imgSCheckerFlag  = "http://res.cloudinary.com/howrowfvo/image/upload/v1382103038/checkerflag_v6n0js.png"
+imgCheckerFlag   = "http://res.cloudinary.com/htx0gxzfc/image/upload/v1382207011/checkerflag_xkkh9q.png"
+imgSCheckerFlag  = "http://res.cloudinary.com/htx0gxzfc/image/upload/v1382207011/s_checkerflag_pkb3js.png"
 imgPriusTan      = "http://res.cloudinary.com/htx0gxzfc/image/upload/c_scale,w_160/v1382103868/prius-tan_pgwkgs.jpg"
 
 # Ajax による JSONP 取得用メソッド
@@ -93,9 +93,9 @@ time_span = 1000
       latlng = new Y.LatLng x.Latitude, x.Longitude
       lat_sum += x.Latitude
       lng_sum += x.Longitude
-      message = "<b>" + x.Name + "</b>" + "<br />" + x.Discription
-      markup latlng, message, true, new Y.Icon imgSCheckerFlag
       setTimeout (->
+        message = "<b>" + x.Name + "</b>" + "<br />" + x.Discription
+        markup latlng, message, true, new Y.Icon imgSCheckerFlag
         ymap.openInfoWindow latlng, message
         ymap.panTo latlng, true
       ), time_span * i
