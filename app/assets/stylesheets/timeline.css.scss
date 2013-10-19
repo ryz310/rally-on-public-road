@@ -1,0 +1,28 @@
+header.timeline-header {
+  border-bottom: 1px solid #222426;
+  padding: 0 10px;
+}
+
+article.tweet-item {
+  border-bottom: 1px solid #3c3c3c;
+  padding: 8px 10px;
+  header.tweet-header{
+    div.tweet-img {
+      float: left;
+      margin-right: 10px;
+      img.tweet-avatar {
+        float: right;
+        width: 48px;
+        height: 48px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        -ms-border-radius: 3px;
+        -o-border-radius: 3px;
+        border-radius: 3px;
+      }
+    }
+    div.nbfc {
+      overflow: hidden;
+    }
+  }
+}

@@ -1,22 +1,9 @@
 <% content_for :sidebar do %>
-  <div>
-    <p>参加中のラリー</p>
-    <ul id="rally_participate"></ul>
-  </div>
-  <div>
-    <p>開催中のラリー</p>
-    <ul id="rally_list"></ul>
-  </div>
-  <div>
-    <%= link_to "Drow Tags", "#", onclick: "drowTag();return false;" %>
-  </div>
-  <div>
-    <%= link_to "Tracking Prius", "#", onclick: "trackingPrius();return false;" %> |
-    <%= link_to "Stop",           "#", onclick: "trackingStop();return false;" %> 
-  </div>
-  <br />
-  
-  <div id="street_view"></div>
+  <%= render 'sidebar' %>
 <% end %>
 
-<div id="map" style="width:1024px; height:768px"></div>
+<% content_for :timeline do %>
+  <%= render 'timeline' %>
+<% end %>
+
+<div id="map" style="width:100%; height:640px"></div>
