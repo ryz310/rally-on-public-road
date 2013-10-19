@@ -119,12 +119,16 @@ time_span = 1000
     center = new Y.LatLng lat_sum / json.length, lng_sum / json.length
     ymap.setZoom 15, true, center, true
 
+# TimeLine に Tweet を追加する
+addTweet = (tweet) ->
+  $(tweet).prependTo("div.timeline-content").fadeIn()
+
 # Tweet の内容を地図上に表示する
 @newMessage = (tweet, lat, lng) ->
   latlng = new Y.LatLng lat, lng
-  message = tweet
   ymap.panTo latlng
-  ymap.openInfoWindow latlng, message
+  ymap.openInfoWindow latlng, tweet
+  addTweet tweet
   setTimeout (->
     ymap.closeInfoWindow()
   ), 5000
