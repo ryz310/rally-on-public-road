@@ -42,7 +42,7 @@ drowPrius = ->
     latlng = new Y.LatLng(json[0].Latitude, json[0].Longitude)
     ymap.clearFeatures()
     markup latlng, "プリウスたんの現在位置<br /><img src='" + imgPriusTan + "' />"
-    ymap.panTo   latlng, true
+    ymap.panTo latlng, true
     updateStreetView latlng
 
 # マーカーを MAP 上に追加
@@ -52,6 +52,7 @@ markup = (latlng, message, enableStreetView = false, icon = Y.Icon.DEFAULT_ICON)
     title += "<img src='" + streetViewUrl(latlng, 120, 90) + "' />"
   marker = new Y.Marker latlng, title: title, icon: icon
   marker.bind 'click', =>
+    ymap.panTo latlng, true
     updateStreetView latlng
   ymap.addFeature marker
 
@@ -81,22 +82,35 @@ clearStreetView = ->
   $("#street_view").empty()
     
 # チェックポイントを描画
+time_span = 1000
 @drowCheckPoint = (rallyID) ->
   myAjax urlCheckPoint + rallyID, (json) ->
     ymap.clearFeatures()
-    json.forEach (x) ->
+    ymap.setZoom 15, true
+    lat_sum = 0
+    lng_sum = 0
+    json.forEach (x, i) ->
       latlng = new Y.LatLng x.Latitude, x.Longitude
-      ymap.setZoom 15, true, latlng, true
-      ymap.panTo   latlng, true
-      markup latlng, "<b>" + x.Name + "</b>" + "<br />" + x.Discription, true, new Y.Icon imgSCheckerFlag
-
+      lat_sum += x.Latitude
+      lng_sum += x.Longitude
+      message = "<b>" + x.Name + "</b>" + "<br />" + x.Discription
+      markup latlng, message, true, new Y.Icon imgSCheckerFlag
+      setTimeout (->
+        ymap.openInfoWindow latlng, message
+        ymap.panTo latlng, true
+      ), time_span * i
+    center = new Y.LatLng lat_sum / json.length, lng_sum / json.length
+    setTimeout (->
+      ymap.setZoom 12, false, center, true
+      ymap.closeInfoWindow()
+    ), time_span * json.length
+    
 # タグを描画
 @drowTag = ->
   myAjax urlTag, (json) ->
     json.forEach (x) ->
       latlng = new Y.LatLng x.Latitude, x.Longitude
-      ymap.setZoom 16, true, latlng, true
-      # img = x.ImagePath
+      ymap.setZoom 12, true, latlng, true
       markup latlng, x.UserName + "<br />" + x.Message, true, new Y.Icon imgCheckerFlag
 
 # プリウスを地図上に追跡する
