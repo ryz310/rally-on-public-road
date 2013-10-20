@@ -105,7 +105,7 @@ time_span = 1000
       ), time_span * i
     center = new Y.LatLng lat_sum / json.length, lng_sum / json.length
     setTimeout (->
-      ymap.setZoom 14, false, center, true
+      ymap.setZoom 10, false, center, true
       ymap.closeInfoWindow()
     ), time_span * json.length
     
@@ -123,6 +123,12 @@ time_span = 1000
     center = new Y.LatLng lat_sum / json.length, lng_sum / json.length
     ymap.setZoom 15, true, center, true
 
+# 地図の位置を指定地点に移動し、StreetView も更新する
+@moveTo = (lat, lng) ->
+  latlng = new Y.LatLng lat, lng
+  ymap.panTo latlng, true
+  updateStreetView latlng
+
 # TimeLine に Tweet を追加する
 addTimeline = (tweet) ->
   $(tweet).prependTo("div.timeline-content").fadeIn()
@@ -139,6 +145,7 @@ drowMessage = (message, latlng) ->
 generateTweetHtml = (fullname, username, avatar_url, timestamp, message, lat, lng) ->
   avatar = new Image()
   avatar.src = avatar_url
+  latlng = new Y.LatLng lat, lng
   tweet = $("<article />").addClass("tweet-item")
             .append(
               $("<header />").addClass("tweet-header")
@@ -169,7 +176,15 @@ generateTweetHtml = (fullname, username, avatar_url, timestamp, message, lat, ln
               .append(
                 $("<div />").addClass("tweet-body")
                 .append($("<p />").append message)
-                .append($("<footer />").addClass "tweet-footer")
+                .append(
+                  $("<footer />").addClass("tweet-footer")
+                  .append(
+                    $("<a />").attr(
+                      href: "#"
+                      onclick: "moveTo(" + lat + "," + lng + "); return false;"
+                    ).append("Detail")
+                  )
+                )
               )
             )
   return $("<div />").append(tweet).html()
