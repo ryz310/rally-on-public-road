@@ -133,7 +133,7 @@ addTweet = (tweet) ->
     ymap.closeInfoWindow()
   ), 5000
 
-@generateTweetHtml = (fullname, username, avatar_url, timestamp, message) ->
+@generateTweetHtml = (fullname, username, avatar_url, timestamp, message, lat, lng) ->
   avatar = new Image()
   avatar.src = avatar_url
   tweet = $("<article />")
@@ -170,8 +170,8 @@ addTweet = (tweet) ->
                 .append($("<footer />").addClass "tweet-footer")
               )
             )
-  console.log tweet
-  $(tweet).prependTo("div.timeline-content").fadeIn()
+  wrap = $("<div />").append tweet
+  @newMessage(wrap.html(), lat, lng)
 
 # プリウスを地図上に追跡する
 trackingTimer = undefined
