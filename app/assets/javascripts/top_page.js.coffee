@@ -133,6 +133,46 @@ addTweet = (tweet) ->
     ymap.closeInfoWindow()
   ), 5000
 
+@generateTweetHtml = (fullname, username, avatar_url, timestamp, message) ->
+  avatar = new Image()
+  avatar.src = avatar_url
+  tweet = $("<article />")
+            .addClass("tweet-item")
+            .append(
+              $("<header />").addClass("tweet-header")
+                .append(
+                  $("<time />").addClass("tweet-timestamp")
+                  .append timestamp
+                ).append(
+                  $("<div />").addClass("tweet-img")
+                  .append(
+                    $(avatar).addClass("tweet-avatar")
+                  )
+                ).append(
+                  $("<div />").addClass("nbfc")
+                  .append(
+                    $("<b />").addClass("fullname")
+                    .append fullname
+                  )
+                  .append(
+                    $("<span />").addClass("username")
+                    .append(
+                      $("<span />").addClass("at")
+                      .append("@")
+                    ).append username
+                  )
+                )
+            ).append(
+              $("<div />").addClass("tweet-content")
+              .append(
+                $("<div />").addClass("tweet-body")
+                .append($("<p />").append message)
+                .append($("<footer />").addClass "tweet-footer")
+              )
+            )
+  console.log tweet
+  $(tweet).prependTo("div.timeline-content").fadeIn()
+
 # プリウスを地図上に追跡する
 trackingTimer = undefined
 @trackingPrius = ->
