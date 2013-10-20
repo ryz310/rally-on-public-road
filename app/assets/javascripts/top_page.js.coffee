@@ -2,7 +2,7 @@ user01 = "001"
 urlRoot          = "http://rallyonpublicroad.azurewebsites.net/"
 urlUser          = urlRoot + "api/user"
 urlRally         = urlRoot + "api/Rally"
-urlCheckPoint    = urlRoot + "api/CheckPoint?rallyId="
+urlCheckPoint    = urlRoot + "api/CheckPoint?id="
 urlTag           = urlRoot + "api/Tag"
 urlParticipate   = urlRoot + "api/participateRally?userId=" + user01
 urlPriusLocation = urlRoot + "api/getPriusLocation"
@@ -54,7 +54,10 @@ markup = (latlng, message, enableStreetView = false, icon = Y.Icon.DEFAULT_ICON)
   marker = new Y.Marker latlng, title: title, icon: icon
   marker.bind 'click', =>
     ymap.panTo latlng, true
+  marker.bind 'mouseover', =>
     updateStreetView latlng
+  marker.bind 'mouseout', =>
+    clearStreetView()
   ymap.addFeature marker
 
 # Google Street View Image API 画像URL
@@ -67,7 +70,7 @@ updateListItem = (targetListId, sourceUrl) ->
     target = $ targetListId
     target.empty()
     json.forEach (x) ->
-      target.append "<li>" + "<a href='#' onclick='drowCheckPoint(" + x.RallyId.substr(5, 3) + ");return false;'>" + x.Name + "</a>"
+      target.append "<li>" + "<a href='#' onclick='drowCheckPoint(" + '"' + x.RallyId.trim() + '"' + ");return false;'>" + x.Name + "</a>"
 
 # StreetView 表示領域を更新
 updateStreetView = (latlng) ->
@@ -87,7 +90,7 @@ time_span = 1000
 @drowCheckPoint = (rallyID) ->
   myAjax urlCheckPoint + rallyID, (json) ->
     ymap.clearFeatures()
-    ymap.setZoom 15, true
+    ymap.setZoom 16, true
     lat_sum = 0
     lng_sum = 0
     json.forEach (x, i) ->
@@ -102,7 +105,7 @@ time_span = 1000
       ), time_span * i
     center = new Y.LatLng lat_sum / json.length, lng_sum / json.length
     setTimeout (->
-      ymap.setZoom 12, false, center, true
+      ymap.setZoom 14, false, center, true
       ymap.closeInfoWindow()
     ), time_span * json.length
     
@@ -173,14 +176,15 @@ generateTweetHtml = (fullname, username, avatar_url, timestamp, message, lat, ln
 
 # Server から Tweet 情報を取得し、地図とTimelineに反映させる
 tweetId = "000"
-loadTweet = (drowMessage = true) ->
+loadTweet = (drowing = true) ->
   myAjax urlTweet + tweetId, (json) ->
     json.forEach (x) ->
       html = generateTweetHtml x.UserName, 'username', x.ImagePath, 'now', x.Message, x.Latitude, x.Longitude
       latlng = new Y.LatLng x.Latitude, x.Longitude
       addTimeline $(html)
-      drowMessage html, latlng if drowMessage
+      drowMessage html, latlng if drowing
       markup latlng, html, true, new Y.Icon imgCheckerFlag
+      ymap.panTo latlng, true
       tweetId = x.TagId
 
 # プリウスを地図上に追跡する
