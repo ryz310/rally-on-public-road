@@ -125,8 +125,7 @@ addTimeline = (tweet) ->
   $(tweet).prependTo("div.timeline-content").fadeIn()
 
 # Tweet の内容を地図上に表示する
-drowMessage = (message, lat, lng) ->
-  latlng = new Y.LatLng lat, lng
+drowMessage = (message, latlng) ->
   ymap.panTo latlng
   ymap.openInfoWindow latlng, message
   setTimeout (->
@@ -137,8 +136,7 @@ drowMessage = (message, lat, lng) ->
 generateTweetHtml = (fullname, username, avatar_url, timestamp, message, lat, lng) ->
   avatar = new Image()
   avatar.src = avatar_url
-  tweet = $("<article />")
-            .addClass("tweet-item")
+  tweet = $("<article />").addClass("tweet-item")
             .append(
               $("<header />").addClass("tweet-header")
                 .append(
@@ -174,13 +172,15 @@ generateTweetHtml = (fullname, username, avatar_url, timestamp, message, lat, ln
   return $("<div />").append(tweet).html()
 
 # Server から Tweet 情報を取得し、地図とTimelineに反映させる
-tweetId = "Tag000"
-loadTweet = ->
+tweetId = "000"
+loadTweet = (drowMessage = true) ->
   myAjax urlTweet + tweetId, (json) ->
     json.forEach (x) ->
-      html = generateTweetHtml x.UserName, x.UserName, x.ImagePath, 'now', x.Message, x.Latitude, x.Longitude
+      html = generateTweetHtml x.UserName, 'username', x.ImagePath, 'now', x.Message, x.Latitude, x.Longitude
+      latlng = new Y.LatLng x.Latitude, x.Longitude
       addTimeline $(html)
-      drowMessage html, x.Latitude, x.Longitude
+      drowMessage html, latlng if drowMessage
+      markup latlng, html, true, new Y.Icon imgCheckerFlag
       tweetId = x.TagId
 
 # プリウスを地図上に追跡する
@@ -202,9 +202,8 @@ $(document).ready =>
   initYMap()
 
   # Timeline 自動更新
-  loadTweet()
+  loadTweet(false)
   setInterval (->
-    console.log tweetId
     loadTweet()
   ), 10000
 
