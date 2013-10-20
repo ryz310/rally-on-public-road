@@ -6,6 +6,7 @@ urlCheckPoint    = urlRoot + "api/CheckPoint?rallyId="
 urlTag           = urlRoot + "api/Tag"
 urlParticipate   = urlRoot + "api/participateRally?userId=" + user01
 urlPriusLocation = urlRoot + "api/getPriusLocation"
+urlTweet         = urlRoot + "api/Timeline?tagid="
 urlStreetView    = "http://maps.googleapis.com/maps/api/streetview?sensor=true"
 imgCheckerFlag   = "http://res.cloudinary.com/htx0gxzfc/image/upload/v1382207011/checkerflag_xkkh9q.png"
 imgSCheckerFlag  = "http://res.cloudinary.com/htx0gxzfc/image/upload/v1382207011/s_checkerflag_pkb3js.png"
@@ -120,20 +121,20 @@ time_span = 1000
     ymap.setZoom 15, true, center, true
 
 # TimeLine に Tweet を追加する
-addTweet = (tweet) ->
+addTimeline = (tweet) ->
   $(tweet).prependTo("div.timeline-content").fadeIn()
 
 # Tweet の内容を地図上に表示する
-@newMessage = (tweet, lat, lng) ->
+drowMessage = (message, lat, lng) ->
   latlng = new Y.LatLng lat, lng
   ymap.panTo latlng
-  ymap.openInfoWindow latlng, tweet
-  addTweet tweet
+  ymap.openInfoWindow latlng, message
   setTimeout (->
     ymap.closeInfoWindow()
   ), 5000
 
-@generateTweetHtml = (fullname, username, avatar_url, timestamp, message, lat, lng) ->
+# Tag の内容から TweetHtml を作成する
+generateTweetHtml = (fullname, username, avatar_url, timestamp, message, lat, lng) ->
   avatar = new Image()
   avatar.src = avatar_url
   tweet = $("<article />")
@@ -170,8 +171,17 @@ addTweet = (tweet) ->
                 .append($("<footer />").addClass "tweet-footer")
               )
             )
-  wrap = $("<div />").append tweet
-  @newMessage(wrap.html(), lat, lng)
+  return $("<div />").append(tweet).html()
+
+# Server から Tweet 情報を取得し、地図とTimelineに反映させる
+tweetId = "Tag000"
+loadTweet = ->
+  myAjax urlTweet + tweetId, (json) ->
+    json.forEach (x) ->
+      html = generateTweetHtml x.UserName, x.UserName, x.ImagePath, 'now', x.Message, x.Latitude, x.Longitude
+      addTimeline $(html)
+      drowMessage html, x.Latitude, x.Longitude
+      tweetId = x.TagId
 
 # プリウスを地図上に追跡する
 trackingTimer = undefined
@@ -190,7 +200,14 @@ trackingTimer = undefined
 $(document).ready =>
   # マップ情報初期化
   initYMap()
-  
+
+  # Timeline 自動更新
+  loadTweet()
+  setInterval (->
+    console.log tweetId
+    loadTweet()
+  ), 10000
+
   # <li>タグ情報更新
   updateListItem "#rally_participate", urlParticipate
   updateListItem "#rally_list",        urlRally
