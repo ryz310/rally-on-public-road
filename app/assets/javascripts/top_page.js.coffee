@@ -86,7 +86,7 @@ clearStreetView = ->
   $("#street_view").empty()
     
 # チェックポイントを描画
-time_span = 1000
+time_span = 2500
 @drowCheckPoint = (rallyID) ->
   myAjax urlCheckPoint + rallyID, (json) ->
     ymap.clearFeatures()
@@ -100,6 +100,7 @@ time_span = 1000
       setTimeout (->
         message = "<b>" + x.Name + "</b>" + "<br />" + x.Discription
         markup latlng, message, true, new Y.Icon imgSCheckerFlag
+        updateStreetView latlng
         ymap.openInfoWindow latlng, message
         ymap.panTo latlng, true
       ), time_span * i
@@ -107,6 +108,7 @@ time_span = 1000
     setTimeout (->
       ymap.setZoom 10, false, center, true
       ymap.closeInfoWindow()
+      clearStreetView()
     ), time_span * json.length
     
 # タグを描画
