@@ -7,7 +7,7 @@
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
 </head>
-<body>
+<body id="body">
   <div id="header">
     <div id="login-info"><%= t :msg_welcome, user: "D-yama" %> <%= link_to "プロフィール編集" %> <%= link_to "ログアウト" %></div>
     <div id="logo">
