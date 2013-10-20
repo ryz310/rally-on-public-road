@@ -1,7 +1,7 @@
 // http://colorschemedesigner.com/#3-61ThN--F3SM
 
-$bg-color: #FFFFFF;
-$color1: #8787FF;
+$bg-color: #000000;
+$color1: #E60100;
 $color2: #B57DFF;
 $color3: #B57DFF;
 $color4: #B57DFF; 
@@ -19,19 +19,15 @@ body {
     float: right;
   }
   
+  #logo {
+    text-align: center;
+    img {
+      width: 100%;
+    }
+  }
   background-color: $color1;
-  min-height: 5.3em;
   margin: 0;
-  color: #f8f8f8;
-  padding: 4px 8px 20px 6px;
-  position: relative;
-  a {
-    color: #f8f8f8;
-    text-decoration: none;
-  }
-  h1 a.ancestor {
-    font-size: 80%;
-  }
+  padding: 0;
 }
 
 h1.headline {
@@ -86,12 +82,6 @@ a {
   &:hover {
     color: #fff;
     background-color: #000;
-  }
-}
-
-div {
-  &.field, &.actions {
-    margin-bottom: 10px;
   }
 }
 

@@ -10,10 +10,10 @@
 <body>
   <div id="header">
     <div id="login-info"><%= t :msg_welcome, user: "D-yama" %> <%= link_to "プロフィール編集" %> <%= link_to "ログアウト" %></div>
-    <h1>みんなで公道ラリー</h1>
-    <div id="main-menu"></div>
+    <div id="logo">
+      <img src="http://res.cloudinary.com/htx0gxzfc/image/upload/v1382275478/head_dwdwkt.png" />
+    </div>
   </div>
-  
   <div id="main" class="<%= sidebar_content? ? '' : 'nosidebar' %>">
     <div id="sidebar">
       <%= yield :sidebar %>
