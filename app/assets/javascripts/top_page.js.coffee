@@ -44,10 +44,9 @@ drowPrius = ->
     ymap.clearFeatures()
     markup latlng, "プリウスたんの現在位置<br /><img src='" + imgPriusTan + "' />"
     ymap.panTo latlng, true
-    updateStreetView latlng
 
 # マーカーを MAP 上に追加
-markup = (latlng, message, enableStreetView = false, icon = Y.Icon.DEFAULT_ICON) ->
+markup = (latlng, message, enableStreetView = true, icon = Y.Icon.DEFAULT_ICON) ->
   title = "<p>" + message + "</p>"
   if enableStreetView
     title += "<img src='" + streetViewUrl(latlng, 120, 90) + "' />"
